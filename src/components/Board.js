@@ -2,17 +2,7 @@ import React, { useState } from "react";
 import Cell from "./Cell";
 
 const Board = () => {
-  const [cellValue, setCellValue] = useState([
-    "X",
-    "X",
-    "X",
-    "X",
-    "X",
-    "X",
-    "X",
-    "X",
-    "X",
-  ]);
+  const [cellValue, setCellValue] = useState(["X", "X", "X", "X", "X", "X", "X", "X", "X" ]);
   // const [gameOn, setGameOn] = useState(false);
   const [showTask, setShowTask] = useState(false);
   const [valueHidden, setValueHidden] = useState("");
