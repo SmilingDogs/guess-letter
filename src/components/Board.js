@@ -4,13 +4,14 @@ import Cell from "./Cell";
 const Board = () => {
   const [cellValues, setCellValues] = useState(["X", "X", "X", "X", "X", "X", "X", "X", "X"]);
   const [gameOn, setGameOn] = useState(false);
-  const [showTask, setShowTask] = useState(false);
   const [message, setMessage] = useState('');
   const [valueHidden, setValueHidden] = useState("");
   const [letter, setLetter] = useState("");
-
+  const [targetLetterCount, setTargetLetterCount] = useState(0);
+  const [attempts, setAttempts] = useState(0);
+  const [showTask, setShowTask] = useState(false);
   const cellContent = ["A", "B", "C"];
-  let targetLetterCount = 0;
+  
   const TOTAL_CELLS = 9;
 
   const populateBoard = (arr) => {
@@ -29,23 +30,24 @@ const Board = () => {
   const countTargetLetters = (arr) => arr.filter(item => item === letter).length;
 
   const startGame = () => {
+    
     setGameOn(true);
-
-    setCellValues(populateBoard(cellContent));
-
     setShowTask(true);
+    setCellValues(populateBoard(cellContent));
     setLetter(chooseLetter(cellContent));
 
     setTimeout(() => {
       setValueHidden("value-hidden");
-      setShowTask(false);
     }, 5000);
 
   };
   
   const endGame = () => {
     setTimeout(() => {
+      setAttempts((prevNumber) => prevNumber + 1);
       setMessage('');
+      setShowTask(false);
+      setTargetLetterCount(0);
       setCellValues(["X", "X", "X", "X", "X", "X", "X", "X", "X"]);
       setGameOn(false);
 
@@ -59,15 +61,16 @@ const Board = () => {
       console.log(cellValues);
       setMessage("Very well! You have good memory!");
 
-      targetLetterCount += 1;
+      setTargetLetterCount((prevCount) => prevCount + 1);
       console.log(targetLetterCount);
 
       e.target.className = 'cell';
 
-      if (targetLetterCount === countTargetLetters(cellValues)) {
+      if (targetLetterCount + 1 === countTargetLetters(cellValues)) {
         setMessage("Fantastic! You have found all target letters!");
         setValueHidden("");
         endGame();
+        
         return;
       }
 
@@ -75,6 +78,7 @@ const Board = () => {
       setMessage('I\'m so sorry...this is wrong. Please try again');
       setValueHidden("");
       endGame();
+      
       return;
     }
   }
@@ -83,9 +87,10 @@ const Board = () => {
 
   return (
     <div>
-      {showTask && (
-        <h2>Memorize all letter {letter} locations. You've got 5 seconds...</h2>
-      )}
+      
+      {showTask && <h2>Memorize all letter {letter} locations. Than, click to open cells with it</h2>}
+      
+      <h3>Number of attempts: {attempts}</h3>
       <div className="board">
         <div>
           <Cell value={cellValues[0]} valueHidden={valueHidden} disabled={!gameOn} onClick={revealValue} />
@@ -103,7 +108,8 @@ const Board = () => {
           <Cell value={cellValues[8]} valueHidden={valueHidden} disabled={!gameOn} onClick={revealValue} />
         </div>
       </div>
-      <button onClick={startGame} disabled={gameOn}>Start Game</button>
+      {attempts === 0 && <button onClick={startGame} disabled={gameOn}>Start Game</button>}
+      {attempts > 0 && <button onClick={startGame} disabled={gameOn}>Re-Start Game</button>}
       {message && <h2>{message}</h2>}
     </div>
   );
