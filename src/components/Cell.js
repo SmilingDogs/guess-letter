@@ -1,14 +1,9 @@
 import React from "react";
 
-const Cell = ({
-  value,
-  valueHidden,
-  onClick,
-  disabled,
-}) => {
+const Cell = ({ value, onClick, disabled, isHidden }) => {
   return (
     <button
-      className={`cell ${valueHidden}`}
+      className={`cell ${isHidden ? "value-hidden" : ""}`}
       onClick={onClick}
       disabled={disabled}
     >
