@@ -1,27 +1,16 @@
 import React, { useState } from "react";
 import Cell from "./Cell";
 
-const defaultGameMatrix = [
-  "O",
-  "O",
-  "O",
-  "O",
-  "O",
-  "O",
-  "O",
-  "O",
-  "O",
-];
+const defaultGameMatrix = ["O", "O", "O", "O", "O", "O", "O", "O", "O"];
 
 const DEFAULT_DELAY = 3000;
 
 const cellContent = ["A", "B", "C"];
+
 const TOTAL_CELLS = defaultGameMatrix.length;
 
 const chooseLetter = (arr) => {
-  const randomIndex = Math.floor(
-    Math.random() * arr.length
-  );
+  const randomIndex = Math.floor(Math.random() * arr.length);
   return arr[randomIndex];
 };
 
@@ -33,8 +22,7 @@ const populateBoard = (arr) => {
   return res;
 };
 
-const countTargetLetters = (arr, letter) =>
-  arr.filter((item) => item === letter).length;
+const countTargetLetters = (arr, letter) =>  arr.filter((item) => item === letter).length;
 
 const GAME_STATUS = {
   NotStarted: "not-started",
