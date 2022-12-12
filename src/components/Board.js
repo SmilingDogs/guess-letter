@@ -13,7 +13,7 @@ const defaultGameMatrix = [
   "O",
 ];
 
-const DEFAULT_DELAY = 2000;
+const DEFAULT_DELAY = 3000;
 
 const cellContent = ["A", "B", "C"];
 const TOTAL_CELLS = defaultGameMatrix.length;
@@ -45,16 +45,12 @@ const GAME_STATUS = {
 };
 
 const Board = () => {
-  const [cellValues, setCellValues] = useState(
-    defaultGameMatrix
-  );
-  const [gameStatus, setGameStatus] = useState(
-    GAME_STATUS.NotStarted
-  );
+  const [cellValues, setCellValues] = useState(defaultGameMatrix);
+  const [gameStatus, setGameStatus] = useState(GAME_STATUS.NotStarted);
   const [letter, setLetter] = useState("");
-  const [targetLetterCount, setTargetLetterCount] =
-    useState(0);
+  const [targetLetterCount, setTargetLetterCount] = useState(0);
   const [attempts, setAttempts] = useState(0);
+  const [guessed, showGuessed] = useState(false);
 
   const startGame = () => {
     setGameStatus(GAME_STATUS.Revealed);
@@ -78,17 +74,19 @@ const Board = () => {
   const revealValue = (e) => {
     if (e.target.innerText !== letter) {
       setGameStatus(GAME_STATUS.Lost);
+      showGuessed(false);
       endGame();
       return;
     }
-
+    showGuessed(true);
+    setTimeout(() => {
+      showGuessed(false);
+    }, 1000);
     setTargetLetterCount((prevCount) => prevCount + 1);
 
     e.target.className = "cell";
 
-    if (
-      targetLetterCount + 1 ===
-      countTargetLetters(cellValues, letter)
+    if (targetLetterCount + 1 === countTargetLetters(cellValues, letter)
     ) {
       setGameStatus(GAME_STATUS.Won);
       endGame();
@@ -145,13 +143,14 @@ const Board = () => {
       </button>
 
       {isWonMessageVisible ? (
-        <h2>Very well! You have good memory!</h2>
+        <h2>Fantastic! You have found all target letters!</h2>
+      ) : null}
+      {guessed ? (
+        <h2>Very well! You have good memory.</h2>
       ) : null}
 
       {isLostMessageVisible ? (
-        <h2>
-          Fantastic! You have found all target letters!
-        </h2>
+        <h2>Sorry...this is incorrect. Try next time!</h2>
       ) : null}
     </div>
   );
